@@ -8,7 +8,13 @@
     },
     {
       "src": "server/api/index.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "server/node_modules/.prisma/**",
+          "server/node_modules/@prisma/**"
+        ]
+      }
     }
   ],
   "routes": [
