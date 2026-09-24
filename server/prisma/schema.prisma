@@ -1,0 +1,35 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        String               @id @default(cuid())
+  name      String
+  color     String               @default("#38bdf8")
+  isDefault Boolean              @default(false)
+  movements MovementCategory[]
+}
+
+model Movement {
+  id          String               @id @default(cuid())
+  type        String // 'ingreso' | 'gasto'
+  amount      Float
+  date        DateTime             @db.Date
+  description String
+  categories  MovementCategory[]
+}
+
+model MovementCategory {
+  movementId String
+  categoryId String
+  movement   Movement @relation(fields: [movementId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([movementId, categoryId])
+}
